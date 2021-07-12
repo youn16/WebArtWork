@@ -1,4 +1,5 @@
 import { Hill  } from "./hill.js";
+import {SheepController} from "./sheep-controller.js";
 
 class App {
     constructor(){
@@ -12,6 +13,8 @@ class App {
             new Hill('#91a7ff',0.5,8),
             new Hill('#c0eb75',1.4,6)
         ];
+
+        this.sheepController = new SheepController();
 
         //화면 사이즈를 가져 오기 위해 resize 
         window.addEventListener('resize',this.resize.bind(this),false);
@@ -33,15 +36,18 @@ class App {
             this.hills[i].resize(this.stageWidth, this.stageHeight);
         }
 
+        this.sheepController.resize(this.stageWidth, this.stageHeight);
+
     }
-    animate(){
+    animate(t){ //t : fps(1초에 보여질 프레임수)를 위한 타임스탬프, 이를 이용하면 fps를 정의할 수 있다.
         window.requestAnimationFrame(this.animate.bind(this));
         this.ctx.clearRect(0,0, this.stageWidth, this.stageHeight);
 
         let dots;
         for (let i = 0 ; i < this.hills.length ; i++){
             dots = this.hills[i].draw(this.ctx);
-        }
+        } //dots : 언덕에 대한 정보
+        this.sheepController.draw(this.ctx, t, dots);
 
     }
 }

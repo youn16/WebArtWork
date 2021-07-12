@@ -32,7 +32,16 @@ export class Hill{
         let prev = cur;
 
         let dots = [];
+        cur.x += this.speed; //움직이는 언덕을 그리기 위해 속도를 추가
 
+        if (cur.x > -this.gap){
+            this.points.unshift({
+                x: -(this.gap *2),
+                y: this.getY()
+            })
+        } else if (cur.x > this.stageWidth +this.gap){
+            this.points.splice(-1);
+        }
         ctx.moveTo(cur.x, cur.y);
 
         let prevCx = cur.x;
@@ -40,7 +49,7 @@ export class Hill{
 
         for ( let i = 1 ; i < this.points.length; i++ ){
             cur  = this.points[i];
-
+            cur.x += this.speed; //움직이는 언덕을 그리기 위해 속도를 추가
             const cx = (prev.x + cur.x) / 2;
             const cy = (prev.y + cur.y) / 2;
             ctx.quadraticCurveTo(prev.x, prev.y , cx, cy); // 곡선을 그림
@@ -49,14 +58,14 @@ export class Hill{
                 x1: prevCx,
                 y1: prevCy,
                 x2: prev.x,
-                x2: prev.y,
+                y2: prev.y,
                 x3: cx,
                 y3: cy
             })
              prev = cur;
              prevCx = cx;
              prevCy = cy;
-         }
+        }
 
         ctx.lineTo(prev.x, prev.y);
         ctx.lineTo(this.stageWidth, this.stageHeight);
